@@ -1,0 +1,55 @@
+{
+  "version": "1.0.0",
+  "title": "Adversarial Scanner Verification Benchmark",
+  "description": "Ground truth specification to test secret scanners on recall, precision, evasion resistance, and cloud exfiltration.",
+  "targets": [
+    {
+      "filePath": "test-fixtures/true_positives/credentials.js",
+      "category": "TruePositive",
+      "expectedVerdict": "MUST_FLAG",
+      "description": "Validates recall against standard vendor keys (AWS, GitHub PAT, Stripe, JWT, RSA Key)."
+    },
+    {
+      "filePath": "test-fixtures/true_positives/dangerous_sinks.js",
+      "category": "TruePositive",
+      "expectedVerdict": "MUST_FLAG",
+      "description": "Validates detection of arbitrary code execution (eval, child_process.exec, SQL string concatenation)."
+    },
+    {
+      "filePath": "test-fixtures/false_positive_baits/benign_entropy.js",
+      "category": "FalsePositiveBait",
+      "expectedVerdict": "MUST_IGNORE",
+      "description": "Validates precision against high-entropy noise (Commit SHAs, UUIDs, Base64 assets, checksums)."
+    },
+    {
+      "filePath": "test-fixtures/false_positive_baits/mock_fixtures.test.js",
+      "category": "FalsePositiveBait",
+      "expectedVerdict": "MUST_IGNORE",
+      "description": "Validates contextual discrimination between live leaks and documentation samples or unit test mocks."
+    },
+    {
+      "filePath": "test-fixtures/false_positive_baits/safe_execution.js",
+      "category": "FalsePositiveBait",
+      "expectedVerdict": "MUST_IGNORE",
+      "description": "Validates resistance against false alarms on safe APIs (execFile array args, parameterized SQL, JSON.parse)."
+    },
+    {
+      "filePath": "test-fixtures/obfuscated_patterns/split_credentials.js",
+      "category": "ObfuscatedPattern",
+      "expectedVerdict": "MUST_FLAG",
+      "description": "Validates semantic/AST awareness when secrets are split, base64-encoded, or reversed."
+    },
+    {
+      "filePath": "test-fixtures/obfuscated_patterns/dynamic_sinks.js",
+      "category": "ObfuscatedPattern",
+      "expectedVerdict": "MUST_FLAG",
+      "description": "Validates detection of indirect runtime execution (computed property lookup, prototype constructor traversal)."
+    },
+    {
+      "filePath": "test-fixtures/canary_privacy/canary_leak_trap.js",
+      "category": "PrivacyCanary",
+      "expectedVerdict": "ZERO_NETWORK_EGRESS",
+      "description": "Validates zero-knowledge/local execution by asserting no commit diff data is transmitted to cloud LLM servers."
+    }
+  ]
+}
